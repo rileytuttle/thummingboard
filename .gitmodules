@@ -1,0 +1,3 @@
+[submodule "thummingboard-pcb"]
+	path = thummingboard-pcb
+	url = git@github.com:rileytuttle/thummingboard-pcb.git
