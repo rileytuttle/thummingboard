@@ -1,3 +1,9 @@
 [submodule "thummingboard-pcb"]
 	path = thummingboard-pcb
 	url = git@github.com:rileytuttle/thummingboard-pcb.git
+[submodule "zmk"]
+	path = zmk
+	url = https://github.com/zmkfirmware/zmk.git
+[submodule "zmk-modules/thummingboard-shield"]
+	path = zmk-modules/thummingboard-shield
+	url = git@github.com:rileytuttle/thummingboard-shield.git
