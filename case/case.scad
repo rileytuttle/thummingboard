@@ -15,7 +15,7 @@ cols = 12; // [10, 11, 12]
 // todo set up key value pairs to set up the different robot sizes. for now just assuming 5x12
 pcb_size = [pcb_width_12_col, pcb_height_5_row];
 pcb_case_gap = 1;
-case_edge_thickness = 2;
+case_edge_thickness = 5;
 case_bottom_thickness = 2;
 case_size_xy = [pcb_size[0]+pcb_case_gap*2 + case_edge_thickness*2 , pcb_size[1]+pcb_case_gap*2 + case_edge_thickness*2];
 // pcb case bottom to pcb bottom standoff.
@@ -23,10 +23,12 @@ pcb_standoff_height = 6;
 pcb_standoff_diam = 5.5;
 pcb_mount_screw = "M2";
 pcb_thickness=1.6;
-top_switch_thickness = 4;
+top_switch_thickness = 4.5;
 
 case_size = [case_size_xy[0], case_size_xy[1], case_bottom_thickness+pcb_standoff_height+pcb_thickness+top_switch_thickness];
 key_spacing = 12;
+top_mount_spacing_fudge = 2;
+top_mount_spacing = [case_size_xy[0]-case_edge_thickness-top_mount_spacing_fudge, case_size_xy[1]-case_edge_thickness-top_mount_spacing_fudge];
 
 module case()
 {
@@ -56,6 +58,7 @@ module case()
         tag("remove") position(BOTTOM+RIGHT+FRONT) back(24+case_edge_thickness+pcb_case_gap) left(108+case_edge_thickness+pcb_case_gap) ycopies(n=3, spacing=key_spacing) cyl(d=5, l=case_bottom_thickness+0.01, anchor=BOTTOM, chamfer=-0.5);
         tag("remove") position(BOTTOM+RIGHT+FRONT) back(36+case_edge_thickness+pcb_case_gap) right(0.005) up(case_bottom_thickness+pcb_standoff_height+5/2) cuboid([case_edge_thickness+0.01+7, 15, 5+10], rounding=2, except=RIGHT, anchor=RIGHT+TOP);
         tag("remove") position(BOTTOM+RIGHT+FRONT) up(case_bottom_thickness/2) back(36+case_edge_thickness+pcb_case_gap) left(key_spacing+pcb_case_gap+case_edge_thickness) cyl(d=3.5, l=case_bottom_thickness+0.1);
+        tag("remove") grid_copies(n=[2,2], spacing=top_mount_spacing) screw_hole("M2", l=case_size[2]) position(BOTTOM) nut_trap_inline(6, anchor=BOTTOM);
     }
 }
 
@@ -160,20 +163,21 @@ module top()
     ];
     diff()
     {
-        cuboid(concat(pcb_size, top_thickness), rounding=3, except=[TOP,BOTTOM]) {
+        cuboid(concat(case_size_xy, top_thickness), rounding=3, except=[TOP,BOTTOM]) {
             tag("remove") grid_copies(n=[cols, rows], spacing=[key_spacing,key_spacing])
             flex_switch_cutout(spin=$col % 2 == 0 ? 170 : -10, distfromcenter=leg);
-            position(TOP) tag("remove")
+            position(BOTTOM) tag("remove")
             for (j=[0:4])
             {
                 for (i=[0:11])
                 {
-                    down(0.21) back(2 * key_spacing) fwd(j*key_spacing)
-                    left(5.5 * key_spacing) right(i*key_spacing) text3d(text=legend[j][i][0], size=3.5, font=legend[j][i][1], anchor=TOP, center=true, h=2);
+                    up(0.21) back(2 * key_spacing) fwd(j*key_spacing)
+                    left(5.5 * key_spacing) right(i*key_spacing) text3d(text=legend[j][i][0], size=3.5, font=legend[j][i][1], anchor=BOTTOM, center=true, h=2);
                 }
             }
-            position(BOTTOM+FRONT) back(24) grid_copies(n=[2, 2], spacing=[key_spacing*4, key_spacing*2]) cyl(d=6, l=4, anchor=TOP);
-            tag("remove") position(TOP+FRONT) back(24) grid_copies(n=[2,2], spacing=[key_spacing*4, key_spacing*2]) screw_hole(pcb_mount_screw, l=4+top_thickness, anchor=TOP, head="flat", counterbore=0.5);
+            // position(BOTTOM+FRONT) back(24) grid_copies(n=[2, 2], spacing=[key_spacing*4, key_spacing*2]) cyl(d=6, l=4, anchor=TOP);
+            // tag("remove") position(TOP+FRONT) back(24) grid_copies(n=[2,2], spacing=[key_spacing*4, key_spacing*2]) screw_hole(pcb_mount_screw, l=4+top_thickness, anchor=TOP, head="flat", counterbore=0.5);
+            tag("remove") grid_copies(n=[2,2], spacing=top_mount_spacing) screw_hole("M2", l=case_size[2]);
         }
     }
 }
@@ -191,8 +195,9 @@ module top_paint_stencil()
 
 // case();
 // bat_standoff();
-// top();
+// up(20)
+top();
 // down(5)
-top_paint_stencil();
+// top_paint_stencil();
 // flex_switch_cutout();
 // text("The Quick Brown Fox Jumps Over the Lazy Dog", font="Pervitina Dex", size=20);
