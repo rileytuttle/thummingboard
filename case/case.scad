@@ -163,13 +163,13 @@ module top()
         cuboid(concat(pcb_size, top_thickness), rounding=3, except=[TOP,BOTTOM]) {
             tag("remove") grid_copies(n=[cols, rows], spacing=[key_spacing,key_spacing])
             flex_switch_cutout(spin=$col % 2 == 0 ? 170 : -10, distfromcenter=leg);
-            position(TOP) tag("remove")
+            position(BOTTOM) tag("remove")
             for (j=[0:4])
             {
                 for (i=[0:11])
                 {
-                    down(0.21) back(2 * key_spacing) fwd(j*key_spacing)
-                    left(5.5 * key_spacing) right(i*key_spacing) text3d(text=legend[j][i][0], size=3.5, font=legend[j][i][1], anchor=TOP, center=true, h=2);
+                    up(0.21) back(2 * key_spacing) fwd(j*key_spacing)
+                    left(5.5 * key_spacing) right(i*key_spacing) text3d(text=legend[j][i][0], size=3.5, font=legend[j][i][1], anchor=BOTTOM, center=true, h=2);
                 }
             }
             position(BOTTOM+FRONT) back(24) grid_copies(n=[2, 2], spacing=[key_spacing*4, key_spacing*2]) cyl(d=6, l=4, anchor=TOP);
@@ -189,10 +189,10 @@ module top_paint_stencil()
     }
 }
 
-// case();
+case();
 // bat_standoff();
 // top();
 // down(5)
-top_paint_stencil();
+// top_paint_stencil();
 // flex_switch_cutout();
 // text("The Quick Brown Fox Jumps Over the Lazy Dog", font="Pervitina Dex", size=20);
