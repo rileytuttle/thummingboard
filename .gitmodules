@@ -7,3 +7,6 @@
 [submodule "zmk-modules/thummingboard-shield"]
 	path = zmk-modules/thummingboard-shield
 	url = git@github.com:rileytuttle/thummingboard-shield.git
+[submodule "case/openscad-library-manager"]
+	path = case/openscad-library-manager
+	url = git@github.com:rileytuttle/openscad-library-manager.git
